@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRef } from "react";
 import "./App.css";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
@@ -18,29 +19,89 @@ function App() {
   const initialState = {
     ongoing: {
       title: "Ongoing",
-      items: [item],
+      items: [item, item2],
     },
     delayed: {
       title: "Delayed",
-      items: [item2],
+      items: [],
     },
     finished: {
       title: "Finished",
       items: [],
     },
   };
-
+  const [text, setText] = useState("");
   const [state, setState] = useState(initialState);
+
+  const handleDragEnd = ({ destination, source }) => {
+    console.log("from", source);
+    console.log("to", destination);
+    if (!destination) {
+      return;
+    }
+    if (
+      destination.index === source.index &&
+      destination.droppableId === source.droppableId
+    ) {
+      return;
+    }
+    // Creating a copy of item before removing it from state
+
+    const itemCopy = {
+      ...state[source.droppableId].items[source.index],
+    };
+    setState((prev) => {
+      prev = { ...prev };
+      // Remove from previous items array
+
+      prev[source.droppableId].items.splice(source.index, 1);
+
+      // Adding to new item array location
+      prev[destination.droppableId].items.splice(
+        destination.index,
+        0,
+        itemCopy
+      );
+      return prev;
+    });
+  };
+  const addItem = () => {
+    setState((prev) => {
+      return {
+        ...prev,
+        ongoing: {
+          title: "Ongoing",
+          items: [
+            {
+              id: v4(),
+              name: text,
+            },
+            ...prev.ongoing.items,
+          ],
+        },
+      };
+    });
+    setText("");
+  };
 
   return (
     <div className="App">
-      <DragDropContext onDragEnd={(e) => console.log(e)}>
+      <div>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <button onClick={addItem}>Add</button>
+      </div>
+      <DragDropContext onDragEnd={handleDragEnd}>
         {_.map(state, (data, key) => {
           return (
             <div key={key} className={"column"}>
               <h3>{data.title}</h3>
               <Droppable droppableId={key}>
-                {(provided) => {
+                {(provided, snapshot) => {
+                  console.log(snapshot);
                   return (
                     <div
                       ref={provided.innerRef}
@@ -54,13 +115,16 @@ function App() {
                             index={index}
                             draggableId={el.id}
                           >
-                            {(provided) => {
+                            {(provided, snapshot) => {
+                              console.log(snapshot);
                               return (
                                 <div
+                                  className={`item ${
+                                    snapshot.isDragging && "dragging"
+                                  }`}
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  style={{ ...provided.draggableProps.style }}
                                 >
                                   {el.name}
                                 </div>
@@ -69,6 +133,7 @@ function App() {
                           </Draggable>
                         );
                       })}
+                      {provided.placeholder}
                     </div>
                   );
                 }}
