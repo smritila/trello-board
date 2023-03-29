@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useRef } from "react";
 import "./App.css";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
