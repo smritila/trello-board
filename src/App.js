@@ -32,6 +32,14 @@ function App() {
   const [text, setText] = useState("");
   const [state, setState] = useState(initialState);
 
+  //setText("abc");
+  /**
+   * 
+   setText((prevState) => {
+    return prevState + "!!!";
+   })
+   */
+
   const handleDragEnd = ({ destination, source }) => {
     console.log("from", source);
     console.log("to", destination);
@@ -65,22 +73,24 @@ function App() {
     });
   };
   const addItem = () => {
-    setState((prev) => {
-      return {
-        ...prev,
-        ongoing: {
-          title: "Ongoing",
-          items: [
-            {
-              id: v4(),
-              name: text,
-            },
-            ...prev.ongoing.items,
-          ],
-        },
-      };
-    });
-    setText("");
+    if (text != "") {
+      setState((prev) => {
+        return {
+          ...prev,
+          ongoing: {
+            title: "Ongoing",
+            items: [
+              {
+                id: v4(),
+                name: text,
+              },
+              ...prev.ongoing.items,
+            ],
+          },
+        };
+      });
+      setText("");
+    }
   };
 
   return (
