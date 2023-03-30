@@ -28,3 +28,31 @@
 .item.dragging {
   background-color: coral;
 }
+.input-field {
+  margin: 10px;
+  background-color: blanchedalmond;
+  border: none;
+  outline: none;
+  padding: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #d17e26;
+  margin: 10px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.fa-color {
+  color: white;
+}
+
+.mr-2 {
+  margin-right: 5px;
+}

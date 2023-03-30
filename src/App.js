@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./App.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
 import { v4 } from "uuid";
@@ -98,15 +101,23 @@ function App() {
       <div>
         <input
           type="text"
+          className={"input-field"}
           value={text}
           onChange={(e) => setText(e.target.value)}
+          placeholder="Add some task here"
         />
-        <button onClick={addItem}>Add</button>
+        <button onClick={addItem}>
+          <FontAwesomeIcon
+            icon={faPlus}
+            className="fa-color mr-2"
+          ></FontAwesomeIcon>
+          Add
+        </button>
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         {_.map(state, (data, key) => {
           return (
-            <div key={key} className={"column"}>
+            <div key={key} className="column">
               <h3>{data.title}</h3>
               <Droppable droppableId={key}>
                 {(provided, snapshot) => {
